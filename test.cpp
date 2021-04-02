@@ -1,40 +1,27 @@
+#include <windows.h>
 #include <glut.h>
-#include <GL.h>
-#include <GLU.h>
 
-GLfloat Delta = 0.0;
-
-void myDisplay()
+void reshape(int w, int h) 
 {
-	glClear(GL_COLOR_BUFFER_BIT);
-	glBegin(GL_POLYGON);
-	glColor3f(1.0, 0.0, 0.0);
-	glVertex3f(-1.0 + Delta, -0.5, 0.0);
-	glVertex3f(0.0 + Delta, -0.5, 0.0);
-	glVertex3f(0.0 + Delta, 0.5, 0.0);
-	glVertex3f(-1.0 + Delta, 0.5, 0.0);
-	glEnd();
-	glutSwapBuffers();	// 버퍼를 교환한다
+	glLoadIdentity(); 
+	glViewport(0, 0, w, h); // 좌측하단 : (0, 0)에서부터 창의 너비:w, 창의 높이:h
+	gluOrtho2D(0.0, 100.0, 0.0, 100.0);
 }
 
-void myIdle()
+void display(void)
 {
-	Delta = Delta + 0.001;
-	glutPostRedisplay();	// 현재 윈도우를 다시 그린다.
+	glClear(GL_COLOR_BUFFER_BIT); // 화면을 지우고
+	glColor3f(1.0, 0.0, 0.0); // (R, G, B)=(1, 0, 0) : 빨간색, 1이 제일 큰값
+	glRectf(30.0, 30.0, 50.0, 50.0); // 창에서 사각형 좌측하단좌표:(30, 30), 우측상단좌표:(50, 50)
+	glutSwapBuffers(); // 그래픽카드 메모리에 그린 것을 화면에 나타내라
 }
 
-int main(int argc, char ** argv)
+void main(int argc, char **argv)
 {
-	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);	// 더블 버퍼를 사용한다
-	glutInitWindowSize(300, 300);	//윈도우 창 크기
-	glutCreateWindow("Drawing Example");
-	glClearColor(1, 1, 1, 1);	// black
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-1.0, 1.0, -1.0, 1.0, 1.0, -1.0);
-	glutDisplayFunc(myDisplay);
-	glutIdleFunc(myIdle);
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+	glutCreateWindow("example");
+	glutReshapeFunc(reshape); // 창의 크기를 변경하다가 놓았을 떄 위치 결정
+	glutDisplayFunc(display); // 가려졌다가 display 되었을 때 호출되는 함수
 	glutMainLoop();
-
-	return 0;
 }
