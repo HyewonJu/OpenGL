@@ -1,3 +1,5 @@
+// 마우스로 사각형 그리기
+
 #include <glut.h>
 
 GLint topLeftX, topLeftY, bottomRightX, bottomRightY;
